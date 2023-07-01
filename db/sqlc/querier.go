@@ -9,13 +9,19 @@ import (
 )
 
 type Querier interface {
+	CreateAccount(ctx context.Context, arg CreateAccountParams) (Accounts, error)
 	CreateCategory(ctx context.Context, arg CreateCategoryParams) (Categories, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (Users, error)
+	DeleteAccount(ctx context.Context, id int32) error
 	DeleteCategory(ctx context.Context, id int32) error
+	GetAccount(ctx context.Context, id int32) (Accounts, error)
+	GetAccountGraph(ctx context.Context, arg GetAccountGraphParams) (int64, error)
+	GetAccounts(ctx context.Context, arg GetAccountsParams) ([]GetAccountsRow, error)
 	GetCategories(ctx context.Context, arg GetCategoriesParams) ([]Categories, error)
 	GetCategory(ctx context.Context, id int32) (Categories, error)
 	GetUser(ctx context.Context, username string) (Users, error)
 	GetUserById(ctx context.Context, id int32) (Users, error)
+	UpdateAccount(ctx context.Context, arg UpdateAccountParams) (Accounts, error)
 	UpdateCategory(ctx context.Context, arg UpdateCategoryParams) (Categories, error)
 }
 
