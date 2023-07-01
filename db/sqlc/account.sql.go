@@ -35,7 +35,7 @@ type CreateAccountParams struct {
 	Date        time.Time `json:"date"`
 }
 
-func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (Accounts, error) {
+func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (Account, error) {
 	row := q.queryRow(ctx, q.createAccountStmt, createAccount,
 		arg.UserID,
 		arg.CategoryID,
@@ -45,7 +45,7 @@ func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (A
 		arg.Value,
 		arg.Date,
 	)
-	var i Accounts
+	var i Account
 	err := row.Scan(
 		&i.ID,
 		&i.UserID,
@@ -73,9 +73,9 @@ const getAccount = `-- name: GetAccount :one
 SELECT id, user_id, category_id, title, type, description, value, date, created_at FROM accounts WHERE id = $1 LIMIT 1
 `
 
-func (q *Queries) GetAccount(ctx context.Context, id int32) (Accounts, error) {
+func (q *Queries) GetAccount(ctx context.Context, id int32) (Account, error) {
 	row := q.queryRow(ctx, q.getAccountStmt, getAccount, id)
-	var i Accounts
+	var i Account
 	err := row.Scan(
 		&i.ID,
 		&i.UserID,
@@ -204,14 +204,14 @@ type UpdateAccountParams struct {
 	Value       int32  `json:"value"`
 }
 
-func (q *Queries) UpdateAccount(ctx context.Context, arg UpdateAccountParams) (Accounts, error) {
+func (q *Queries) UpdateAccount(ctx context.Context, arg UpdateAccountParams) (Account, error) {
 	row := q.queryRow(ctx, q.updateAccountStmt, updateAccount,
 		arg.ID,
 		arg.Title,
 		arg.Description,
 		arg.Value,
 	)
-	var i Accounts
+	var i Account
 	err := row.Scan(
 		&i.ID,
 		&i.UserID,

@@ -25,9 +25,9 @@ type CreateUserParams struct {
 	Email    string `json:"email"`
 }
 
-func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (Users, error) {
+func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
 	row := q.queryRow(ctx, q.createUserStmt, createUser, arg.Username, arg.Password, arg.Email)
-	var i Users
+	var i User
 	err := row.Scan(
 		&i.ID,
 		&i.Username,
@@ -42,9 +42,9 @@ const getUser = `-- name: GetUser :one
 SELECT id, username, password, email, created_at FROM users WHERE username = $1 LIMIT 1
 `
 
-func (q *Queries) GetUser(ctx context.Context, username string) (Users, error) {
+func (q *Queries) GetUser(ctx context.Context, username string) (User, error) {
 	row := q.queryRow(ctx, q.getUserStmt, getUser, username)
-	var i Users
+	var i User
 	err := row.Scan(
 		&i.ID,
 		&i.Username,
@@ -59,9 +59,9 @@ const getUserById = `-- name: GetUserById :one
 SELECT id, username, password, email, created_at FROM users WHERE id = $1 LIMIT 1
 `
 
-func (q *Queries) GetUserById(ctx context.Context, id int32) (Users, error) {
+func (q *Queries) GetUserById(ctx context.Context, id int32) (User, error) {
 	row := q.queryRow(ctx, q.getUserByIdStmt, getUserById, id)
-	var i Users
+	var i User
 	err := row.Scan(
 		&i.ID,
 		&i.Username,

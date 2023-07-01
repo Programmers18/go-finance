@@ -27,14 +27,14 @@ type CreateCategoryParams struct {
 	Description string `json:"description"`
 }
 
-func (q *Queries) CreateCategory(ctx context.Context, arg CreateCategoryParams) (Categories, error) {
+func (q *Queries) CreateCategory(ctx context.Context, arg CreateCategoryParams) (Category, error) {
 	row := q.queryRow(ctx, q.createCategoryStmt, createCategory,
 		arg.UserID,
 		arg.Title,
 		arg.Type,
 		arg.Description,
 	)
-	var i Categories
+	var i Category
 	err := row.Scan(
 		&i.ID,
 		&i.UserID,
@@ -66,7 +66,7 @@ type GetCategoriesParams struct {
 	Description string `json:"description"`
 }
 
-func (q *Queries) GetCategories(ctx context.Context, arg GetCategoriesParams) ([]Categories, error) {
+func (q *Queries) GetCategories(ctx context.Context, arg GetCategoriesParams) ([]Category, error) {
 	rows, err := q.query(ctx, q.getCategoriesStmt, getCategories,
 		arg.UserID,
 		arg.Type,
@@ -77,9 +77,9 @@ func (q *Queries) GetCategories(ctx context.Context, arg GetCategoriesParams) ([
 		return nil, err
 	}
 	defer rows.Close()
-	items := []Categories{}
+	items := []Category{}
 	for rows.Next() {
-		var i Categories
+		var i Category
 		if err := rows.Scan(
 			&i.ID,
 			&i.UserID,
@@ -105,9 +105,9 @@ const getCategory = `-- name: GetCategory :one
 SELECT id, user_id, title, type, description, created_at FROM categories WHERE id = $1 LIMIT 1
 `
 
-func (q *Queries) GetCategory(ctx context.Context, id int32) (Categories, error) {
+func (q *Queries) GetCategory(ctx context.Context, id int32) (Category, error) {
 	row := q.queryRow(ctx, q.getCategoryStmt, getCategory, id)
-	var i Categories
+	var i Category
 	err := row.Scan(
 		&i.ID,
 		&i.UserID,
@@ -129,9 +129,9 @@ type UpdateCategoryParams struct {
 	Description string `json:"description"`
 }
 
-func (q *Queries) UpdateCategory(ctx context.Context, arg UpdateCategoryParams) (Categories, error) {
+func (q *Queries) UpdateCategory(ctx context.Context, arg UpdateCategoryParams) (Category, error) {
 	row := q.queryRow(ctx, q.updateCategoryStmt, updateCategory, arg.ID, arg.Title, arg.Description)
-	var i Categories
+	var i Category
 	err := row.Scan(
 		&i.ID,
 		&i.UserID,
