@@ -28,7 +28,7 @@ type CreateCategoryParams struct {
 }
 
 func (q *Queries) CreateCategory(ctx context.Context, arg CreateCategoryParams) (Category, error) {
-	row := q.queryRow(ctx, q.createCategoryStmt, createCategory,
+	row := q.db.QueryRowContext(ctx, createCategory,
 		arg.UserID,
 		arg.Title,
 		arg.Type,
@@ -51,7 +51,7 @@ DELETE FROM categories WHERE id = $1
 `
 
 func (q *Queries) DeleteCategory(ctx context.Context, id int32) error {
-	_, err := q.exec(ctx, q.deleteCategoryStmt, deleteCategory, id)
+	_, err := q.db.ExecContext(ctx, deleteCategory, id)
 	return err
 }
 
@@ -67,7 +67,7 @@ type GetCategoriesParams struct {
 }
 
 func (q *Queries) GetCategories(ctx context.Context, arg GetCategoriesParams) ([]Category, error) {
-	rows, err := q.query(ctx, q.getCategoriesStmt, getCategories,
+	rows, err := q.db.QueryContext(ctx, getCategories,
 		arg.UserID,
 		arg.Type,
 		arg.Title,
@@ -106,7 +106,7 @@ SELECT id, user_id, title, type, description, created_at FROM categories WHERE i
 `
 
 func (q *Queries) GetCategory(ctx context.Context, id int32) (Category, error) {
-	row := q.queryRow(ctx, q.getCategoryStmt, getCategory, id)
+	row := q.db.QueryRowContext(ctx, getCategory, id)
 	var i Category
 	err := row.Scan(
 		&i.ID,
@@ -130,7 +130,7 @@ type UpdateCategoryParams struct {
 }
 
 func (q *Queries) UpdateCategory(ctx context.Context, arg UpdateCategoryParams) (Category, error) {
-	row := q.queryRow(ctx, q.updateCategoryStmt, updateCategory, arg.ID, arg.Title, arg.Description)
+	row := q.db.QueryRowContext(ctx, updateCategory, arg.ID, arg.Title, arg.Description)
 	var i Category
 	err := row.Scan(
 		&i.ID,

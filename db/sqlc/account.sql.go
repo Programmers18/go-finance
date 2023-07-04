@@ -36,7 +36,7 @@ type CreateAccountParams struct {
 }
 
 func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (Account, error) {
-	row := q.queryRow(ctx, q.createAccountStmt, createAccount,
+	row := q.db.QueryRowContext(ctx, createAccount,
 		arg.UserID,
 		arg.CategoryID,
 		arg.Title,
@@ -65,7 +65,7 @@ DELETE FROM accounts WHERE id = $1
 `
 
 func (q *Queries) DeleteAccount(ctx context.Context, id int32) error {
-	_, err := q.exec(ctx, q.deleteAccountStmt, deleteAccount, id)
+	_, err := q.db.ExecContext(ctx, deleteAccount, id)
 	return err
 }
 
@@ -74,7 +74,7 @@ SELECT id, user_id, category_id, title, type, description, value, date, created_
 `
 
 func (q *Queries) GetAccount(ctx context.Context, id int32) (Account, error) {
-	row := q.queryRow(ctx, q.getAccountStmt, getAccount, id)
+	row := q.db.QueryRowContext(ctx, getAccount, id)
 	var i Account
 	err := row.Scan(
 		&i.ID,
@@ -101,7 +101,7 @@ type GetAccountGraphParams struct {
 }
 
 func (q *Queries) GetAccountGraph(ctx context.Context, arg GetAccountGraphParams) (int64, error) {
-	row := q.queryRow(ctx, q.getAccountGraphStmt, getAccountGraph, arg.UserID, arg.Type)
+	row := q.db.QueryRowContext(ctx, getAccountGraph, arg.UserID, arg.Type)
 	var sum_value int64
 	err := row.Scan(&sum_value)
 	return sum_value, err
@@ -150,7 +150,7 @@ type GetAccountsRow struct {
 }
 
 func (q *Queries) GetAccounts(ctx context.Context, arg GetAccountsParams) ([]GetAccountsRow, error) {
-	rows, err := q.query(ctx, q.getAccountsStmt, getAccounts,
+	rows, err := q.db.QueryContext(ctx, getAccounts,
 		arg.UserID,
 		arg.Type,
 		arg.CategoryID,
@@ -205,7 +205,7 @@ type UpdateAccountParams struct {
 }
 
 func (q *Queries) UpdateAccount(ctx context.Context, arg UpdateAccountParams) (Account, error) {
-	row := q.queryRow(ctx, q.updateAccountStmt, updateAccount,
+	row := q.db.QueryRowContext(ctx, updateAccount,
 		arg.ID,
 		arg.Title,
 		arg.Description,
