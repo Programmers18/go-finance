@@ -17,6 +17,7 @@ type Querier interface {
 	GetAccount(ctx context.Context, id int32) (Account, error)
 	GetAccountGraph(ctx context.Context, arg GetAccountGraphParams) (int64, error)
 	GetAccounts(ctx context.Context, arg GetAccountsParams) ([]GetAccountsRow, error)
+	GetAccountsReports(ctx context.Context, arg GetAccountsReportsParams) (int64, error)
 	GetCategories(ctx context.Context, arg GetCategoriesParams) ([]Category, error)
 	GetCategory(ctx context.Context, id int32) (Category, error)
 	GetUser(ctx context.Context, username string) (User, error)

@@ -38,7 +38,7 @@ AND a.date = $6;
 SELECT SUM(value) AS sum_value FROM accounts 
 WHERE user_id = $1 AND type = $2;
 
----- name: GetAccountsReports :one
+-- name: GetAccountsReports :one
 SELECT COUNT(*) FROM accounts 
 WHERE user_id = $1 AND type = $2;
 

@@ -189,6 +189,23 @@ func (q *Queries) GetAccounts(ctx context.Context, arg GetAccountsParams) ([]Get
 	return items, nil
 }
 
+const getAccountsReports = `-- name: GetAccountsReports :one
+SELECT COUNT(*) FROM accounts 
+WHERE user_id = $1 AND type = $2
+`
+
+type GetAccountsReportsParams struct {
+	UserID int32  `json:"user_id"`
+	Type   string `json:"type"`
+}
+
+func (q *Queries) GetAccountsReports(ctx context.Context, arg GetAccountsReportsParams) (int64, error) {
+	row := q.db.QueryRowContext(ctx, getAccountsReports, arg.UserID, arg.Type)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const updateAccount = `-- name: UpdateAccount :one
 UPDATE accounts SET 
 title = $2, 
