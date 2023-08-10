@@ -82,7 +82,7 @@ func (server *Server) deleteCategory(ctx *gin.Context) {
 }
 
 type updateCategoryRequest struct {
-	ID          int32  `uri:"id" binding:"required"`
+	ID          int32  `json:"id" binding:"required"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
 }
@@ -117,7 +117,7 @@ type getCategoriesRequest struct {
 
 func (server *Server) getCategories(ctx *gin.Context) {
 	var req getCategoriesRequest
-	err := ctx.ShouldBindUri(&req)
+	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 	}
