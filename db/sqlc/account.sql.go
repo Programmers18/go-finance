@@ -91,7 +91,7 @@ func (q *Queries) GetAccount(ctx context.Context, id int32) (Account, error) {
 }
 
 const getAccountGraph = `-- name: GetAccountGraph :one
-SELECT SUM(value) AS sum_value FROM accounts 
+SELECT COUNT(*) FROM accounts 
 WHERE user_id = $1 AND type = $2
 `
 
@@ -190,7 +190,7 @@ func (q *Queries) GetAccounts(ctx context.Context, arg GetAccountsParams) ([]Get
 }
 
 const getAccountsReports = `-- name: GetAccountsReports :one
-SELECT COUNT(*) FROM accounts 
+SELECT SUM(value) AS sum_value FROM accounts 
 WHERE user_id = $1 AND type = $2
 `
 
